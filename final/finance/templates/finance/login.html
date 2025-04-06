@@ -1,0 +1,36 @@
+{% extends "finance/layout.html" %}
+{% load static %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+    {% if message %}
+        <div class="container">
+            {% if success %}
+                <div class="alert alert-success" role="alert">{{ message }}</div>
+            {% else %}
+                <div class="alert alert-danger" role="alert">{{ message }}</div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <div class="container">
+        <div class="col">
+            <div id="login">Login</div>
+            <form action="{% url 'login' %}" method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input required autofocus type="text" class="form-control" id="username" name="username">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input required type="password" class="form-control" id="password" name="password">
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+            <br>
+            Dont have an account? <a href="{% url 'register' %}">Register here.</a>
+        </div>
+    </div>
+{% endblock %}

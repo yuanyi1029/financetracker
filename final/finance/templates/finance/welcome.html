@@ -1,0 +1,64 @@
+{% extends "finance/layout.html" %}
+{% load static %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-7">
+                <div class="row" id="welcome-main">                    
+                    <div class="col">
+                        <span class="blue">C</span>
+                        <span class="red">S</span>
+                        <span class="yellow">5</span>
+                        <span class="blue">0</span>
+                        <span class="green">W</span>
+                        <span class="purple">Finance Tracker</span>
+                    </div>
+                </div>
+                <div class="row" id="welcome-secondary">The Best Finance Tracker.</div>
+                <div class="row" id="welcome-tertiary">Stay on top of your finances with expense-income tracking and reporting. Reach your financial goals with CS50W Finance Tracker.</div>
+                <br>
+                <a class="btn btn-success" href="{% url 'register' %}">Try Now - It's Free</a>
+            </div>
+
+            <div class="col-xl-5">
+                <img id="finance-img"src="{% static 'finance/finance.svg' %}" alt="Finance Illustration"/>
+            </div>
+        </div>
+
+        <br><hr><br>
+
+        <div class="row">
+            <div class="col-xl-5 align-self-center">
+                <div class="row" id="welcome2-secondary">User Friendly User Interface</div>
+                <div class="row" id="welcome-tertiary">The user interface for finance tracker has been designed to be user friendly for people of all ages!</div>
+            </div>
+
+            <div class="col-xl-7">
+                <img id="example-img"src="{% static 'finance/dashboard.png' %}" alt="Dashboard"/>
+            </div>
+        </div>
+
+        <br><br>
+
+        <div class="row">
+            <div class="col-xl-7">
+                <img id="example-img"src="{% static 'finance/records.png' %}" alt="Records"/>
+            </div>
+
+            <div class="col-xl-5 align-self-center" style="padding-left: 50px;">
+                <div class="row" id="welcome2-secondary">Clear and Convenient</div>
+                <div class="row" id="welcome-tertiary">Financial activity can be documented conveniently and displayed clearly and easily understandable!</div>
+            </div>
+
+        </div>
+    </div>
+
+    <br><br>
+
+
+{% endblock %}
+
+

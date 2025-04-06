@@ -1,0 +1,221 @@
+{% extends "finance/layout.html" %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block script %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const pieChartElement = document.getElementById('pieChart');
+            const lineChartElement = document.getElementById('lineChart');
+            
+            new Chart(pieChartElement, {
+                type: 'pie',
+                data: {
+                    labels: [
+                        {% for key in pie_data.keys %}
+                            "{{ key }}",
+                        {% endfor %}
+                    ],
+                    datasets: [{
+                        label: 'MYR',
+                        data: [
+                            {% for value in pie_data.values %}
+                                {{ value }},
+                            {% endfor %}
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                // options: {
+                //     scales: {
+                //         y: {
+                //             beginAtZero: true
+                //         }
+                //     },
+                // }
+            });
+
+            new Chart(lineChartElement, {
+                type: 'line',
+                data: {
+                    labels: [
+                        {% for key in line_data.keys %}
+                            "{{ key }}",
+                        {% endfor %}
+                    ],
+                    datasets: [{
+                        label: 'MYR',
+                        data: [
+                            {% for value in line_data.values %}
+                                {{ value }},
+                            {% endfor %}
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                }
+            });
+        })
+    </script>
+    <script src="{% static 'finance/dashboard.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col" id="dashboard">User Dashboard</div>
+        </div>
+        <div class="row">
+            <div class="col" id="dashboard2"><b>Welcome Back</b>, <span style="color:#5709FE; font-weight:bold;">{{ request.user.username}}</span></div>
+        </div>
+        <div class="row">
+            <div class="col" id="dashboard2">Here's a quick view of your personal finance statistics</div>
+        </div>
+    </div>
+
+    <br><br>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="card text-center" style="width: 275px">
+                    <div class="card-header" id="card-header">
+                        <div class="row">
+                            <div class="card-title">Income (Past 7 Days)</div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-white" id="card-footer">
+                        <div class="card-text">MYR {{ past_7_total_income }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="card text-center" style="width: 275px">
+                    <div class="card-header" id="card-header">
+                        <div class="row">
+                            <div class="card-title">Expenses (Past 7 Days)</div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-white" id="card-footer">
+                        <div class="card-text">MYR {{ past_7_total_expense }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="card text-center" style="width: 275px">
+                    <div class="card-header" id="card-header">
+                        <div class="row">
+                            <div class="card-title">Average Spending (Past 7 Days)</div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-white" id="card-footer">
+                        <div class="card-text">MYR {{ past_7_average_expense }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card text-center text-white">
+                    <div class="card-header" id="card-header" style="background-color: #5709FE;">
+                        <div class="row">
+                            <div class="card-title">Daily Spendings</div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <canvas id="lineChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card text-center text-white">
+                    <div class="card-header" id="card-header" style="background-color: #5709FE;">
+                        <div class="row">
+                            <div class="card-title">Expenses Structure</div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br><br>
+
+        <div class="row">
+            <div class="col" id="recent-records">
+                Recent Records
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="row table-responsive">
+                <table class="table table-hover">
+                    <thead class="table table-secondary">
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Amount (MYR)</th>
+                            <th scope="col">Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if not records %}
+                            <th>Not Record Data</th>
+                        {% else %}
+                            {% for record in records %}
+                                <tr>
+                                    <td scope="row">{{ record.time | date:"F j, Y, g:i A"}}</td>
+        
+                                    {% for category in categories %}
+                                        {% if category.0 == record.category %}
+                                            <td>{{ category.1 }}</td>
+                                        {% endif %}
+                                    {% endfor%}
+        
+                                    {% if record.amount > 0 %}
+                                        <th style="color: green">{{ record.amount }}</th>
+                                    {% else %}
+                                        <th style="color: red">{{ record.amount }}</th>
+                                    {% endif %}
+        
+                                    {% if not record.comment %}
+                                        <td>None</td>
+                                        {% else %}
+                                        <td>{{ record.comment }}</td>
+                                    {% endif %}
+
+                                    <td>
+                                        <form action="{% url 'delete' record.id %}" method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="origin_url" value="dashboard">
+                                            <input class="btn btn-danger" type="submit" name="delete" value="Delete">
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>            
+        </div>
+        <div class="row">
+            <div><a href="{% url 'records' %}">View all Records.</a></div>
+        </div>
+    </div>
+
+{% endblock %}
