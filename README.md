@@ -1,6 +1,6 @@
 # CS50W Finance Tracker
 
-![Project Image](https://imgur.com/TmvFxJo.png)
+![Project Image](https://github.com/yuanyi1029/financetracker/blob/295577c4580d5a8432a4e4bfdc1a58a6cf36401e/finance.png)
 #### Video Demo: https://youtu.be/Y7p4wvrOxyo
 
 ## 💬 Description
